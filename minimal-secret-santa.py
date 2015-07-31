@@ -19,14 +19,14 @@ def reshuffled_range(num_items):
 
 def check_all_shuffled(sequence):
     """
-    Check there is any element in the original position
+    Check all elements in the sequence are out of its original position
     """
-    return not any([ index == value for (index, value) in enumerate(sequence) ])
+    return all([ index != value for (index, value) in enumerate(sequence) ])
 
 
 def reshuffled_tested_range(num_items):
     """
-    Shuffle a list of n items without any coincidence with its previous state    
+    Shuffle a list of n items without any coincidence with its original position
     """
     while True:
         sequence = reshuffled_range(num_items)
@@ -49,7 +49,7 @@ def send_mail(from_index, to_index):
     src_peer = peer_list.keys()[from_index]
     dst_peer = peer_list.keys()[to_index]
     message = MIMEText(templatized_msg(config['message']), "html")
-    mail_address = peerlist[src_peer]
+    mail_address = peer_list[src_peer]
     msg['Subject'] = templatized_msg(config['subject'])
     msg['From'] = config['mail_from']
     msg['To'] = mail_address
@@ -69,6 +69,7 @@ def init_mail_system():
 
 
 if __name__ == '__main__':
+
     config = yaml.load(open(sys.argv[1], 'r'))
     peer_list = config['participants']
     init_mail_system()
