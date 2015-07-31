@@ -13,6 +13,7 @@ import random
 from email.mime.text import MIMEText
 import yaml
 import sys
+import os
 
 
 def reshuffled_range(num_items):
@@ -46,8 +47,9 @@ def templatized_message(msg, involved_peers):
     """
     Prepare the message substituing some defined variables with its value
     """
-    
-    return msg.replace('%src_peer%', involved_peers['src']).replace('%dst_peer%', involved_peers['dst']).encode('utf-8')
+    return msg.replace('%src_peer%', involved_peers['src']) \
+              .replace('%dst_peer%', involved_peers['dst']) \
+              .encode('utf-8')
 
 
 def send_mail(mail_system, from_index, to_index):
@@ -59,7 +61,7 @@ def send_mail(mail_system, from_index, to_index):
     message = MIMEText(templatized_message(config['message'], involved_peers), "html")
     mail_address = peer_list[involved_peers['src']]
     message['Subject'] = templatized_message(config['subject'], involved_peers)
-    message['From'] = config['mail']['smtp_login']
+    message['From'] = config['mail'].get('smtp_login') or os.environ['mail_smtp_login']
     message['To'] = mail_address
     mail_system.sendmail("", [mail_address], message.as_string())
 
@@ -68,21 +70,28 @@ def init_mail_system():
     """
     Prepare the mail system
     """
-    s = smtplib.SMTP(config['mail']['smtp_server'], config['mail']['smtp_port'])
-    s.ehlo()
-    s.starttls()
-    s.ehlo()
-    s.login(config['mail']['smtp_login'], config['mail']['smtp_passwd'])
-    return s
+    mail_system = smtplib.SMTP(config['mail']['smtp_server'], config['mail']['smtp_port'])
+    mail_system.ehlo()
+    mail_system.starttls()
+    mail_system.ehlo()
+    smtp_login = config['mail'].get('smtp_login') or os.environ['mail_smtp_login']
+    smtp_passwd = config['mail'].get('smtp_passwd') or os.environ['mail_smtp_passwd']
+    mail_system.login(smtp_login, smtp_passwd)
+    return mail_system
 
 
 if __name__ == '__main__':
 
-    config = yaml.load(open(sys.argv[1], 'r'))
+    if len(sys.argv) < 2:
+        sys.exit("Usage:\n\t%s <config_file>\n" % sys.argv[0])
+  
+    with open(sys.argv[1], 'r') as stream:
+        config = yaml.load(stream)
+
     peer_list = config['participants']
-    mail = init_mail_system()
+    dispatcher = init_mail_system()
 
     reshuffled_sequence = reshuffled_tested_range(len(peer_list.keys()))
-    [ send_mail(mail, src, dst) for (src, dst) in enumerate(reshuffled_sequence) ]
+    [ send_mail(dispatcher, src, dst) for (src, dst) in enumerate(reshuffled_sequence) ]
 
 # vim: set expandtab ts=4 sw=4:
