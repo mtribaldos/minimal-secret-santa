@@ -20,7 +20,7 @@ setup(
     version=0.1,
     url='https://github.com/mtribaldos/minimal-secret-santa',
     license='GPL-3+',
-    author=u'Miguel Ángel Tribaldos',
+    author='Miguel A. Tribaldos',
     tests_require=[],
     install_requires = deps,
     scripts = ['minimal-secret-santa.py'],
