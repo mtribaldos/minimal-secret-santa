@@ -42,46 +42,47 @@ def reshuffled_tested_range(num_items):
     return sequence
 
 
-def templatized_message(msg):
+def templatized_message(msg, involved_peers):
     """
     Prepare the message substituing some defined variables with its value
     """
-    return msg.replace('%src_peer%', msg_peer).replace('%dst_peer%', dst_peer).encode('utf-8')
+    
+    return msg.replace('%src_peer%', involved_peers['src']).replace('%dst_peer%', involved_peers['dst']).encode('utf-8')
 
 
-def send_mail(from_index, to_index):
+def send_mail(mail_system, from_index, to_index):
     """
     Generate and send the Secret Santa message 
     """
-    src_peer = peer_list.keys()[from_index]
-    dst_peer = peer_list.keys()[to_index]
-    message = MIMEText(templatized_msg(config['message']), "html")
-    mail_address = peer_list[src_peer]
-    msg['Subject'] = templatized_msg(config['subject'])
-    msg['From'] = config['mail_from']
-    msg['To'] = mail_address
-    s.sendmail("", [mail_address], message.as_string())
+    involved_peers = dict(src = peer_list.keys()[from_index],
+                          dst = peer_list.keys()[to_index])
+    message = MIMEText(templatized_message(config['message'], involved_peers), "html")
+    mail_address = peer_list[involved_peers['src']]
+    message['Subject'] = templatized_message(config['subject'], involved_peers)
+    message['From'] = config['mail']['smtp_login']
+    message['To'] = mail_address
+    mail_system.sendmail("", [mail_address], message.as_string())
 
 
 def init_mail_system():
     """
     Prepare the mail system
     """
-    s = smtplib.SMTP(config['mail_smtp_server'], config['mail_smtp_port'])
+    s = smtplib.SMTP(config['mail']['smtp_server'], config['mail']['smtp_port'])
     s.ehlo()
     s.starttls()
     s.ehlo()
-    s.login(config['mail_smtp_login'], config['mail_smtp_passwd'])
-
+    s.login(config['mail']['smtp_login'], config['mail']['smtp_passwd'])
+    return s
 
 
 if __name__ == '__main__':
 
     config = yaml.load(open(sys.argv[1], 'r'))
     peer_list = config['participants']
-    init_mail_system()
+    mail = init_mail_system()
 
     reshuffled_sequence = reshuffled_tested_range(len(peer_list.keys()))
-    [ send_mail(src, dst) for (src, dst) in enumerate(reshuffled_sequence) ]
+    [ send_mail(mail, src, dst) for (src, dst) in enumerate(reshuffled_sequence) ]
 
 # vim: set expandtab ts=4 sw=4:
