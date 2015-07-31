@@ -1,0 +1,15 @@
+participants:
+    Alice: alice@fakemail.com
+    Bob: bob@fakemail.com
+    Carol: carol@fakemail.com
+    Chuck: chuck@fakemail.com
+    Dave: dave@fakemail.com
+
+subject: Minimal Secret Santa - Raffle Test - %src_peer%
+
+message: Hello %src_peer%, this is a test message. You are in charge to make a present for %dst_peer% </h1>
+
+mail:
+    smtp_server: "smtp.gmail.com"
+    smtp_port: 587
+
