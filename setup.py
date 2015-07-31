@@ -1,9 +1,11 @@
 #!/usr/bin/env python
+# -*- coding: latin-1 -*-
+
 from __future__ import print_function
 from setuptools import setup, find_packages
 import platform
 
-deps = ['smtplib', 'random', 'email', 'yaml']
+deps = ['email', 'pyyaml']
 
 if platform.system().lower() == "windows":
     deps.append('pyreadline')
