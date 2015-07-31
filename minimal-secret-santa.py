@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: latin-1 -*-
 
+""" minimal-secret-santa.py: Minimalistic 'Secret Santa' or secret gift assignation """
+
+__author__ = u"Miguel Ángel Tribaldos"
+__license__ = "GPL"
+__version__ = "0.1"
+__email__ = "mtribaldos@gmail.com"
+
 import smtplib
 import random
 from email.mime.text import MIMEText
