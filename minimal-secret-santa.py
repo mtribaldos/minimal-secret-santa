@@ -74,8 +74,8 @@ def init_mail_system():
     mail_system.ehlo()
     mail_system.starttls()
     mail_system.ehlo()
-    smtp_login = config['mail'].get('smtp_login') or os.environ['mail_smtp_login']
-    smtp_passwd = config['mail'].get('smtp_passwd') or os.environ['mail_smtp_passwd']
+    smtp_login = config['mail'].get('smtp_login') or os.environ['MAIL_SMTP_LOGIN']
+    smtp_passwd = config['mail'].get('smtp_passwd') or os.environ['MAIL_SMTP_PASSWD']
     mail_system.login(smtp_login, smtp_passwd)
     return mail_system
 
@@ -93,5 +93,7 @@ if __name__ == '__main__':
 
     reshuffled_sequence = reshuffled_tested_range(len(peer_list.keys()))
     [ send_mail(dispatcher, src, dst) for (src, dst) in enumerate(reshuffled_sequence) ]
+
+    dispatcher.close()
 
 # vim: set expandtab ts=4 sw=4:
