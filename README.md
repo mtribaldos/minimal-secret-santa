@@ -12,10 +12,15 @@ cd minimal-secret-santa
 sudo python setup.py install
 ```
 
+Create a YAML configuration file as specified in [this test setup](blob/master/test/config.yaml).
+
 ## Usage
 
 ```shell
-./minimal-secret-santa 
+export MAIL_SMTP_LOGIN=...
+export MAIL_SMTP_PASSWD=...
+
+./minimal-secret-santa <config_file>
 ```
 
 
