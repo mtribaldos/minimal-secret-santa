@@ -12,7 +12,7 @@ cd minimal-secret-santa
 sudo python setup.py install
 ```
 
-Create a YAML configuration file as specified in [this test setup](blob/master/test/config.yaml).
+Create a YAML configuration file as specified in [this test setup](test/config.yaml).
 
 ## Usage
 
