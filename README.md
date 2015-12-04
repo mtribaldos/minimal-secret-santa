@@ -20,7 +20,7 @@ Create a YAML configuration file as specified in [this test setup](test/config.y
 export MAIL_SMTP_LOGIN=...
 export MAIL_SMTP_PASSWD=...
 
-./minimal-secret-santa <config_file>
+minimal-secret-santa <config_file>
 ```
 
 
