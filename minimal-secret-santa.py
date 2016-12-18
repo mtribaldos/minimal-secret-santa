@@ -61,7 +61,7 @@ def send_mail(mail_system, from_index, to_index):
     message = MIMEText(templatized_message(config['message'], involved_peers), "html")
     mail_address = peer_list[involved_peers['src']]
     message['Subject'] = templatized_message(config['subject'], involved_peers)
-    message['From'] = config['mail'].get('smtp_login') or os.environ['mail_smtp_login']
+    message['From'] = config['mail'].get('smtp_login') or os.environ['MAIL_SMTP_LOGIN']
     message['To'] = mail_address
     mail_system.sendmail("", [mail_address], message.as_string())
 
