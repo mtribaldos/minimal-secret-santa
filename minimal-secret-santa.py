@@ -91,6 +91,7 @@ if __name__ == '__main__':
     peer_list = config['participants']
     dispatcher = init_mail_system()
 
+    random.seed()
     reshuffled_sequence = reshuffled_tested_range(len(peer_list.keys()))
     [ send_mail(dispatcher, src, dst) for (src, dst) in enumerate(reshuffled_sequence) ]
 
